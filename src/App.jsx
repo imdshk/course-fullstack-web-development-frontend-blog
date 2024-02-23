@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
+import Userstatus from './components/Userstatus'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -16,6 +17,14 @@ const App = () => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )  
+  }, [])
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser")
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+    }
   }, [])
 
   const handleUsernameChange = (event) => {
@@ -33,6 +42,10 @@ const App = () => {
           username: username,
           password: password
       })
+
+      window.localStorage.setItem(
+        "loggedBlogappUser", JSON.stringify(user)
+      )
       setUser(user)
       setUsername("")
       setPassword("")
@@ -54,6 +67,12 @@ const App = () => {
     }
   }
 
+  const handleLogout = (event) => {
+    event.preventDefault()
+    window.localStorage.removeItem("loggedBlogappUser")
+    setUser(null)
+  }
+
   return (
     <div>
       <Notification message={notificationMessage}/>
@@ -66,8 +85,9 @@ const App = () => {
           onPasswordChange={handlePasswordChange}
         /> :
         <div>
-          <p>{user.name} logged in</p>
           <h2>blogs</h2>
+          <Userstatus onClick={handleLogout} name={user.name} />
+          <br />
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
