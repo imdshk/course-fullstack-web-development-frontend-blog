@@ -96,18 +96,36 @@ const App = () => {
 
   const handleCreateBlog = async (event) => {
     event.preventDefault()
-    const newBlog = await blogService.createBlog({
-      title: title, 
-      author: author, 
-      url: url
-    })
-    const existingBlogs = blogs
-    const updatedBlogs = existingBlogs.concat(newBlog)
-    setBlogs(updatedBlogs)
-    setTitle("")
-    setAuthor("")
-    setUrl("")
-  }
+    try {
+      const newBlog = await blogService.createBlog({
+        title: title, 
+        author: author, 
+        url: url
+      })
+      const existingBlogs = blogs
+      const updatedBlogs = existingBlogs.concat(newBlog)
+      setBlogs(updatedBlogs)
+      setTitle("")
+      setAuthor("")
+      setUrl("")
+      setNotificationMessage([
+        `a new blog '${newBlog.title}' by '${newBlog.author}' added`,
+        "good"
+      ])
+      setTimeout(() => {
+        setNotificationMessage([null, null])
+      }, 5000)
+    } catch (error) {
+      console.log(error)
+      setNotificationMessage([
+        `Error ${error.response.status}: ${error.response.data.error}`,
+        "bad"
+      ])
+      setTimeout(() => {
+        setNotificationMessage([null, null])
+      }, 5000)
+    }
+  } 
 
   return (
     <div>
