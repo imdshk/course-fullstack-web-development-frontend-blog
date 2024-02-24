@@ -18,9 +18,12 @@ const App = () => {
   const [notificationMessage, setNotificationMessage] = useState([null, null])
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    blogService
+      .getAll()
+      .then(blogs =>{
+        blogs.sort((firstBlog, secondBlog) => secondBlog.likes - firstBlog.likes)
+        setBlogs( blogs )
+      })  
   }, [])
 
   useEffect(() => {
