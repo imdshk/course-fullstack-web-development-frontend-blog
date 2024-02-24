@@ -5,6 +5,7 @@ import LoginForm from './components/LoginForm'
 import Userstatus from './components/Userstatus'
 import BlogForm from './components/BlogForm'
 import Blog from './components/Blog'
+import Toggalable from './components/Toggalable'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -15,9 +16,6 @@ const App = () => {
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
   const [notificationMessage, setNotificationMessage] = useState([null, null])
-  const [title, setTitle] = useState("")
-  const [author, setAuthor] = useState("")
-  const [url, setUrl] = useState("")
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -82,32 +80,13 @@ const App = () => {
     blogService.setToken(null)
   }
 
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value)
-  }
-
-  const handleAuthorChange = (event) => {
-    setAuthor(event.target.value)
-  }
-
-  const handleUrlChange = (event) => {
-    setUrl(event.target.value)
-  }
-
-  const handleCreateBlog = async (event) => {
-    event.preventDefault()
+  const handleCreateBlog = async (blogObject) => {
     try {
-      const newBlog = await blogService.createBlog({
-        title: title, 
-        author: author, 
-        url: url
-      })
+      const newBlog = await blogService.createBlog(blogObject)
       const existingBlogs = blogs
       const updatedBlogs = existingBlogs.concat(newBlog)
       setBlogs(updatedBlogs)
-      setTitle("")
-      setAuthor("")
-      setUrl("")
+      
       setNotificationMessage([
         `a new blog '${newBlog.title}' by '${newBlog.author}' added`,
         "good"
@@ -116,7 +95,6 @@ const App = () => {
         setNotificationMessage([null, null])
       }, 5000)
     } catch (error) {
-      console.log(error)
       setNotificationMessage([
         `Error ${error.response.status}: ${error.response.data.error}`,
         "bad"
@@ -141,16 +119,12 @@ const App = () => {
         <div>
           <h2>blogs</h2>
           <Userstatus onClick={handleLogout} name={user.name} />
-          <br />
-          <BlogForm 
-            onSubmit={handleCreateBlog}
-            title={title}
-            author={author}
-            url={url}
-            onTitleChange={handleTitleChange}
-            onAuthorChange={handleAuthorChange}
-            onUrlChange={handleUrlChange}
-          />
+          <br />            
+          <Toggalable buttonLabel="create blog">
+            <BlogForm 
+              createBlog={handleCreateBlog}
+            />
+          </Toggalable>
           <br />
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
