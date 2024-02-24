@@ -108,11 +108,13 @@ const App = () => {
   const handleLikes = async (likeObject) => {
     try {
       await blogService.updateLikes(likeObject)
-      const existingBlogs = blogs
-      const blogIndex = blogs.findIndex((blog) => blog.id === likeObject.id)
-      existingBlogs[blogIndex].likes = likeObject.likes
-      setBlogs(existingBlogs)
-      console.log(blogs)
+      const blogToUpdate = blogs.find((blog) => blog.id === likeObject.id)
+      const updatedBlog = { ...blogToUpdate, likes: blogToUpdate.likes + 1}
+      setBlogs(prevState => 
+        prevState.map(blog => 
+          blog.id !== updatedBlog.id ? blog : updatedBlog
+        )  
+      )
     } catch (error) {
       setNotificationMessage([
         `Error ${error.response.status}: ${error.response.data.error}`,
