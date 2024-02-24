@@ -23,13 +23,13 @@ const createBlog = async ({ title, author, url }) => {
       "authorization": token
     }
   }
-  
+
   const response = await axios.post(
-    baseUrl, 
-    data, 
+    baseUrl,
+    data,
     config
   )
-  
+
   return response.data
 }
 

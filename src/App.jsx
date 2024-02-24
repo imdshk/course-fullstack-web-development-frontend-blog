@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react"
 
-import Notification from './components/Notification'
-import LoginForm from './components/LoginForm'
-import Userstatus from './components/Userstatus'
-import BlogForm from './components/BlogForm'
-import Blog from './components/Blog'
-import Toggalable from './components/Toggalable'
+import Notification from "./components/Notification"
+import LoginForm from "./components/LoginForm"
+import Userstatus from "./components/Userstatus"
+import BlogForm from "./components/BlogForm"
+import Blog from "./components/Blog"
+import Toggalable from "./components/Toggalable"
 
-import blogService from './services/blogs'
-import loginService from './services/login'
+import blogService from "./services/blogs"
+import loginService from "./services/login"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -20,10 +20,10 @@ const App = () => {
   useEffect(() => {
     blogService
       .getAll()
-      .then(blogs =>{
+      .then(blogs => {
         blogs.sort((firstBlog, secondBlog) => secondBlog.likes - firstBlog.likes)
         setBlogs( blogs )
-      })  
+      })
   }, [])
 
   useEffect(() => {
@@ -47,8 +47,8 @@ const App = () => {
     event.preventDefault()
     try {
       const user = await loginService.login({
-          username: username,
-          password: password
+        username: username,
+        password: password
       })
 
       window.localStorage.setItem(
@@ -89,7 +89,7 @@ const App = () => {
       const existingBlogs = blogs
       const updatedBlogs = existingBlogs.concat(newBlog)
       setBlogs(updatedBlogs)
-      
+
       setNotificationMessage([
         `a new blog '${newBlog.title}' by '${newBlog.author}' added`,
         "good"
@@ -112,11 +112,11 @@ const App = () => {
     try {
       await blogService.updateLikes(likeObject)
       const blogToUpdate = blogs.find((blog) => blog.id === likeObject.id)
-      const updatedBlog = { ...blogToUpdate, likes: blogToUpdate.likes + 1}
-      setBlogs(prevState => 
-        prevState.map(blog => 
+      const updatedBlog = { ...blogToUpdate, likes: blogToUpdate.likes + 1 }
+      setBlogs(prevState =>
+        prevState.map(blog =>
           blog.id !== updatedBlog.id ? blog : updatedBlog
-        )  
+        )
       )
     } catch (error) {
       setNotificationMessage([
@@ -132,9 +132,9 @@ const App = () => {
   const handleDeleteBlog = async (blogToDelete) => {
     if (window.confirm(`Are you sure you want to delete ${blogToDelete.title} by ${blogToDelete.author}?`)){
       try {
-        await blogService.deleteBlog({id: blogToDelete.id})
-        setBlogs(prevState => 
-          prevState.filter(blog => 
+        await blogService.deleteBlog({ id: blogToDelete.id })
+        setBlogs(prevState =>
+          prevState.filter(blog =>
             blog.id !== blogToDelete.id
           )
         )
@@ -161,7 +161,7 @@ const App = () => {
     <div>
       <Notification message={notificationMessage}/>
       {user === null ?
-        <LoginForm 
+        <LoginForm
           onSubmit={handleLogin}
           username={username}
           password={password}
@@ -171,20 +171,20 @@ const App = () => {
         <div>
           <h2>blogs</h2>
           <Userstatus onClick={handleLogout} name={user.name} />
-          <br />            
+          <br />
           <Toggalable buttonLabel="create blog">
-            <BlogForm 
+            <BlogForm
               createBlog={handleCreateBlog}
             />
           </Toggalable>
           <br />
           {blogs.map(blog =>
-            <Blog 
-              key={blog.id} 
-              blog={blog} 
+            <Blog
+              key={blog.id}
+              blog={blog}
               user={user}
               updateLikes={handleLikes}
-              deleteBlog={handleDeleteBlog} 
+              deleteBlog={handleDeleteBlog}
             />
           )}
         </div>

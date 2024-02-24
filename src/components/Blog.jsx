@@ -15,7 +15,7 @@ const Blog = ({ blog, user, updateLikes, deleteBlog }) => {
   }
 
   const removeButtonStyle = {
-    backgroundColor: "#f44336", 
+    backgroundColor: "#f44336",
     color: "white"
   }
 
@@ -29,7 +29,7 @@ const Blog = ({ blog, user, updateLikes, deleteBlog }) => {
   const addLikes = (event) => {
     event.preventDefault()
     updateLikes({
-      id: blog.id, 
+      id: blog.id,
       likes: blog.likes + 1
     })
   }
@@ -44,21 +44,22 @@ const Blog = ({ blog, user, updateLikes, deleteBlog }) => {
   }
 
   return(
-  <div style={blogStyle}>
-    {blog.title} by {blog.author}
-    <button onClick={toggleDetailsVisibility}>{detailsVisibile ? "hide" : "view"}</button>
-    <div style={showDetails}>
-      <a href={blog.url} target="_blank">{blog.url}</a>
-      <br/>
-      likes {blog.likes}
-      <button onClick={addLikes}>like</button>
-      <br/>
-      {blog.user.name}
-      <div style={showDeleteButton}>
-        <button onClick={removeBlog} style={removeButtonStyle}>delete</button>
+    <div style={blogStyle}>
+      {blog.title} by {blog.author}
+      <button onClick={toggleDetailsVisibility}>{detailsVisibile ? "hide" : "view"}</button>
+      <div style={showDetails}>
+        <a href={blog.url} target="_blank" rel="noreferrer">{blog.url}</a>
+        <br/>
+        likes {blog.likes}
+        <button onClick={addLikes}>like</button>
+        <br/>
+        {blog.user.name}
+        <div style={showDeleteButton}>
+          <button onClick={removeBlog} style={removeButtonStyle}>delete</button>
+        </div>
       </div>
     </div>
-  </div>  
-)}
+  )
+}
 
 export default Blog
