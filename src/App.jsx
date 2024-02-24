@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
-import LoginForm from './components/LoginForm'
+
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
 import Userstatus from './components/Userstatus'
+import BlogForm from './components/BlogForm'
+import Blog from './components/Blog'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -12,6 +15,9 @@ const App = () => {
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
   const [notificationMessage, setNotificationMessage] = useState([null, null])
+  const [title, setTitle] = useState("")
+  const [author, setAuthor] = useState("")
+  const [url, setUrl] = useState("")
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -24,6 +30,7 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 
@@ -47,6 +54,7 @@ const App = () => {
         "loggedBlogappUser", JSON.stringify(user)
       )
       setUser(user)
+      blogService.setToken(user.token)
       setUsername("")
       setPassword("")
       setNotificationMessage([
@@ -71,6 +79,34 @@ const App = () => {
     event.preventDefault()
     window.localStorage.removeItem("loggedBlogappUser")
     setUser(null)
+    blogService.setToken(null)
+  }
+
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value)
+  }
+
+  const handleAuthorChange = (event) => {
+    setAuthor(event.target.value)
+  }
+
+  const handleUrlChange = (event) => {
+    setUrl(event.target.value)
+  }
+
+  const handleCreateBlog = async (event) => {
+    event.preventDefault()
+    const newBlog = await blogService.createBlog({
+      title: title, 
+      author: author, 
+      url: url
+    })
+    const existingBlogs = blogs
+    const updatedBlogs = existingBlogs.concat(newBlog)
+    setBlogs(updatedBlogs)
+    setTitle("")
+    setAuthor("")
+    setUrl("")
   }
 
   return (
@@ -87,6 +123,16 @@ const App = () => {
         <div>
           <h2>blogs</h2>
           <Userstatus onClick={handleLogout} name={user.name} />
+          <br />
+          <BlogForm 
+            onSubmit={handleCreateBlog}
+            title={title}
+            author={author}
+            url={url}
+            onTitleChange={handleTitleChange}
+            onAuthorChange={handleAuthorChange}
+            onUrlChange={handleUrlChange}
+          />
           <br />
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
