@@ -103,7 +103,26 @@ const App = () => {
         setNotificationMessage([null, null])
       }, 5000)
     }
-  } 
+  }
+
+  const handleLikes = async (likeObject) => {
+    try {
+      await blogService.updateLikes(likeObject)
+      const existingBlogs = blogs
+      const blogIndex = blogs.findIndex((blog) => blog.id === likeObject.id)
+      existingBlogs[blogIndex].likes = likeObject.likes
+      setBlogs(existingBlogs)
+      console.log(blogs)
+    } catch (error) {
+      setNotificationMessage([
+        `Error ${error.response.status}: ${error.response.data.error}`,
+        "bad"
+      ])
+      setTimeout(() => {
+        setNotificationMessage([null, null])
+      }, 5000)
+    }
+  }
 
   return (
     <div>
@@ -127,7 +146,7 @@ const App = () => {
           </Toggalable>
           <br />
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} updateLikes={handleLikes} />
           )}
         </div>
       }
