@@ -129,6 +129,34 @@ const App = () => {
     }
   }
 
+  const handleDeleteBlog = async (blogToDelete) => {
+    if (window.confirm(`Are you sure you want to delete ${blogToDelete.title} by ${blogToDelete.author}?`)){
+      try {
+        await blogService.deleteBlog({id: blogToDelete.id})
+        setBlogs(prevState => 
+          prevState.filter(blog => 
+            blog.id !== blogToDelete.id
+          )
+        )
+        setNotificationMessage([
+          `Blog '${blogToDelete.title}' by '${blogToDelete.author}' deleted`,
+          "good"
+        ])
+        setTimeout(() => {
+          setNotificationMessage([null, null])
+        }, 5000)
+      } catch (error) {
+        setNotificationMessage([
+          `Error ${error.response.status}: ${error.response.data.error}`,
+          "bad"
+        ])
+        setTimeout(() => {
+          setNotificationMessage([null, null])
+        }, 5000)
+      }
+    }
+  }
+
   return (
     <div>
       <Notification message={notificationMessage}/>
@@ -151,7 +179,13 @@ const App = () => {
           </Toggalable>
           <br />
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} updateLikes={handleLikes} />
+            <Blog 
+              key={blog.id} 
+              blog={blog} 
+              user={user}
+              updateLikes={handleLikes}
+              deleteBlog={handleDeleteBlog} 
+            />
           )}
         </div>
       }
