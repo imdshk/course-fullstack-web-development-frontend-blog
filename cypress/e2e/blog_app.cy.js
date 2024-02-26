@@ -1,15 +1,22 @@
 describe("Blog app", function() {
-  describe("Empty the test db and display login form", function() {
+  describe("Empty the test db and create users", function() {
     beforeEach(function() {
       cy.request("POST", "http://localhost:3003/api/testing/reset")
 
-      const user = {
+      const testuser = {
         name: "Test User",
         username: "testuser",
         password: "123456"
       }
 
-      cy.request("POST", "http://localhost:3003/api/users", user)
+      const nottestuser = {
+        name: "Not Test User",
+        username: "nottestuser",
+        password: "123456"
+      }
+
+      cy.request("POST", "http://localhost:3003/api/users", testuser)
+      cy.request("POST", "http://localhost:3003/api/users", nottestuser)
       cy.visit("http://localhost:5173/")
       cy.wait(1000)
     })
@@ -82,6 +89,20 @@ describe("Blog app", function() {
             true
           })
           cy.get(".blog-details").should("not.exist")
+        })
+
+        it("A user not the creator unable to delete blog", function() {
+          cy.get("#logout-button").click()
+          cy.contains("login")
+          cy.get("#login-input-username").type("nottestuser")
+          cy.get("#login-input-password").type("123456")
+          cy.get("#login-button").click()
+
+          cy.contains("Not Test User logged in")
+
+          cy.get("#blog-button-toggleDetails").click()
+
+          cy.get("#blog-delete").should("have.css", "display", "none")
         })
       })
     })
