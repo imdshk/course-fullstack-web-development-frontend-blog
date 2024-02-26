@@ -81,9 +81,9 @@ test("create new blog and calls onSubmit", async () => {
     />
   )
 
-  const inputTitle = container.querySelector("#form-input-title")
-  const inputAuthor = container.querySelector("#form-input-author")
-  const inputUrl = container.querySelector("#form-input-url")
+  const inputTitle = container.querySelector("#blog-input-title")
+  const inputAuthor = container.querySelector("#blog-input-author")
+  const inputUrl = container.querySelector("#blog-input-url")
   const createButton = screen.getByText("create")
 
   await user.type(inputTitle, "This is a title")
