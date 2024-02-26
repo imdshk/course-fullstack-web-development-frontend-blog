@@ -47,16 +47,16 @@ const Blog = ({ blog, user, updateLikes, deleteBlog }) => {
   return(
     <div style={blogStyle} className="blog" >
       {blog.title} by {blog.author}
-      <button onClick={toggleDetailsVisibility}>{detailsVisibile ? "hide" : "view"}</button>
+      <button onClick={toggleDetailsVisibility} id="blog-button-toggleDetails">{detailsVisibile ? "hide" : "view"}</button>
       <div style={showDetails} className="blog-details">
         <a href={blog.url} target="_blank" rel="noreferrer">{blog.url}</a>
         <br/>
         likes {blog.likes}
-        <button onClick={addLikes}>like</button>
+        <button onClick={addLikes} id="blog-button-like">like</button>
         <br/>
         {blog.user.name}
         <div style={showDeleteButton}>
-          <button onClick={removeBlog} style={removeButtonStyle}>delete</button>
+          <button onClick={removeBlog} style={removeButtonStyle}  id="blog-button-delete">delete</button>
         </div>
       </div>
     </div>

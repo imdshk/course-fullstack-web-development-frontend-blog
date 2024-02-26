@@ -58,6 +58,18 @@ describe("Blog app", function() {
         cy.get("#blog-button-create").click()
       })
 
+      it("A user can like a blog", function() {
+        cy.get("#blog-button-show-create").click()
+        cy.get("#blog-input-title").type("This is a test Blog from Cypress Integration Test")
+        cy.get("#blog-input-author").type("Cypress Test")
+        cy.get("#blog-input-url").type("https://docs.cypress.io/")
+        cy.get("#blog-button-create").click()
+        cy.get("#blog-button-toggleDetails").click()
+
+        cy.get("#blog-button-like").click()
+        cy.get(".blog-details").contains("likes 1")
+      })
+
     })
   })
 })
