@@ -1,5 +1,6 @@
 const Notification = ({ message }) => {
   const notificationColor = message[1] === "good" ? "green" : "red"
+  const notificationId = message[1] === "good" ? "notification" : "notification-error"
   const notificationStyle = {
     color: notificationColor,
     background: "lightgray",
@@ -15,7 +16,7 @@ const Notification = ({ message }) => {
   }
 
   return (
-    <div style={notificationStyle}>
+    <div style={notificationStyle} id={notificationId}>
       {message[0]}
     </div>
   )
