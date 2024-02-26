@@ -178,15 +178,17 @@ const App = () => {
             />
           </Toggalable>
           <br />
-          {blogs.map(blog =>
-            <Blog
-              key={blog.id}
-              blog={blog}
-              user={user}
-              updateLikes={handleLikes}
-              deleteBlog={handleDeleteBlog}
-            />
-          )}
+          <div className="blogs" >
+            {blogs.map(blog =>
+              <Blog
+                key={blog.id}
+                blog={blog}
+                user={user}
+                updateLikes={handleLikes}
+                deleteBlog={handleDeleteBlog}
+              />
+            )}
+          </div>
         </div>
       }
     </div>

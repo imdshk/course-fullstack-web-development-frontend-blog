@@ -104,6 +104,43 @@ describe("Blog app", function() {
 
           cy.get("#blog-delete").should("have.css", "display", "none")
         })
+
+        it("Blog ordered by most likes", function() {
+          cy.get("#blog-input-title").type("This is a Blog with most likes")
+          cy.get("#blog-input-author").type("Cypress Test")
+          cy.get("#blog-input-url").type("https://docs.cypress.io/")
+          cy.get("#blog-button-create").click()
+
+          cy.get(".blog>#blog-button-toggleDetails").eq(1).click()
+          cy.get(".blog>.blog-details>#blog-button-like").eq(1).click()
+          cy.get(".blog>.blog-details>#blog-button-like").eq(1).click()
+          cy.get(".blog>.blog-details>#blog-button-like").eq(1).click()
+          cy.get(".blog>.blog-details>#blog-button-like").eq(1).click()
+          cy.get(".blog>.blog-details>#blog-button-like").eq(1).click()
+          cy.wait(500)
+          cy.get(".blog>.blog-details").eq(1).contains("likes 5")
+
+          cy.get(".blog>#blog-button-toggleDetails").eq(0).click()
+          cy.get(".blog>.blog-details>#blog-button-like").eq(0).click()
+          cy.get(".blog>.blog-details>#blog-button-like").eq(0).click()
+          cy.get(".blog>.blog-details>#blog-button-like").eq(0).click()
+          cy.get(".blog>.blog-details>#blog-button-like").eq(0).click()
+          cy.get(".blog>.blog-details>#blog-button-like").eq(0).click()
+          cy.wait(500)
+          cy.get(".blog>.blog-details").eq(0).contains("likes 5")
+
+          cy.get(".blog>.blog-details>#blog-button-like").eq(1).click()
+          cy.get(".blog>.blog-details>#blog-button-like").eq(1).click()
+          cy.get(".blog>.blog-details>#blog-button-like").eq(1).click()
+          cy.wait(500)
+          cy.get(".blog>.blog-details").eq(1).contains("likes 8")
+
+          cy.visit("http://localhost:5173/")
+          cy.get(".blog>#blog-button-toggleDetails").eq(0).click()
+          cy.get(".blog>#blog-button-toggleDetails").eq(1).click()
+          cy.get(".blog>.blog-details").eq(0).contains("likes 8")
+          cy.get(".blog>.blog-details").eq(1).contains("likes 5")
+        })
       })
     })
   })
