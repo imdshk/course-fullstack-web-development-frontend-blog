@@ -21,10 +21,11 @@ const Blog = ({ blog, user, updateLikes, deleteBlog }) => {
 
   const showDetails = { display: detailsVisibile ? "" : "none" }
 
-  const showDeleteButton = { display: user.name === blog.user.name ? "" : "none" }
   const toggleDetailsVisibility = () => {
     setDetailsVisible(!detailsVisibile)
   }
+
+  const showDeleteButton = { display: user.name === blog.user.name ? "" : "none" }
 
   const addLikes = (event) => {
     event.preventDefault()
@@ -47,7 +48,7 @@ const Blog = ({ blog, user, updateLikes, deleteBlog }) => {
     <div style={blogStyle} className="blog" >
       {blog.title} by {blog.author}
       <button onClick={toggleDetailsVisibility}>{detailsVisibile ? "hide" : "view"}</button>
-      <div style={showDetails}>
+      <div style={showDetails} className="blog-details">
         <a href={blog.url} target="_blank" rel="noreferrer">{blog.url}</a>
         <br/>
         likes {blog.likes}
